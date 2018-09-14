@@ -5,23 +5,21 @@ try:
 except ImportError:
     from io import BytesIO as IO
 
-from django.core.files.base import ContentFile
+
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 
-def resize(file_, max_width=0, max_height=0, crop=0):
+def resize(image ,filename, max_width=0, max_height=0, crop=0):
     max_width = int(max_width)
     max_height = int(max_height)
     crop = int(crop)
 
-    if(max_width is 0 and max_height is 0):
-        return file_
+    
 
     max_width = 9999 if max_width is 0 else max_width
     max_height = 9999 if max_height is 0 else max_height
 
     size = (max_width, max_height)
-    image = Image.open(file_)
 
     if(image.mode == 'RGBA'):
         image.load()
@@ -37,8 +35,9 @@ def resize(file_, max_width=0, max_height=0, crop=0):
         image.thumbnail(size, Image.ANTIALIAS)
 
     image.save(temp, 'jpeg')
+    
     temp.seek(0)
 
-    return SimpleUploadedFile(file_.name,
+    return SimpleUploadedFile(filename,
                               temp.read(),
                               content_type='image/jpeg')
