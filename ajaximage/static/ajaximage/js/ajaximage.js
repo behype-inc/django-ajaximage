@@ -1,3 +1,5 @@
+
+
 (function(){
 
     "use strict"
@@ -7,7 +9,7 @@
             parts = value.split('; ' + name + '=')
         if (parts.length == 2) return parts.pop().split(';').shift()
     }
-
+	
     var request = function(method, url, data, headers, el, showProgress, cb) {
         var req = new XMLHttpRequest()
         req.open(method, url, true)
@@ -56,6 +58,9 @@
     }
 
     var update = function(el, data) {
+        // Trigger the clone event from hype-gallery.js
+        $(".ajaximage").trigger('image:clone', [data.pk, data.url]);
+		/*
         var link = el.querySelector('.file-link'),
             path = el.querySelector('.file-path'),
             img  = el.querySelector('.file-img')
@@ -65,6 +70,9 @@
         img.src = data.url
 
         el.className = 'ajaximage img-active'
+      	*/
+      	$(".ajaximage").removeClass("progress-active").addClass("form-active");
+      	$(".progress").removeClass("active");
         el.querySelector('.bar').style.width = '0%'
     }
 
@@ -84,7 +92,7 @@
     }
 
     var upload = function(e) {
-        var el      = e.target.parentElement,
+        var el      = e.target.parentElement.parentElement,
             file    = el.querySelector('.file-input').files[0],
             dest    = el.querySelector('.file-dest').value,
             form    = new FormData(),
@@ -108,10 +116,9 @@
                 case 200:
                     update(el, data)
                     break
-                case 400:
-                case 403:
-                    error(el, data.error)
-                    break;
+                case 500:
+                    error(el, 'Ops, system error.')
+					break;
                 default:
                     error(el, 'Sorry, could not upload image.')
             }
@@ -138,16 +145,16 @@
         remove.addEventListener('click', removeUpload, false)
         input.addEventListener('change', upload, false)
     }
-
-    document.addEventListener('DOMContentLoaded', function(e) {
-        ;[].forEach.call(document.querySelectorAll('.ajaximage'), addHandlers)
-    })
-
-    document.addEventListener('DOMNodeInserted', function(e){
-        if(e.target.tagName) {
-            var el = e.target.querySelector('.ajaximage')
-            if(el) addHandlers(el)
-        }
-    })
-
+	
+	    document.addEventListener('DOMContentLoaded', function(e) {
+	        ;[].forEach.call(document.querySelectorAll('.ajaximage'), addHandlers)
+	    })
+	
+	    document.addEventListener('DOMNodeInserted', function(e){
+	        if(e.target.tagName) {
+	            var el = document.querySelector('.ajaximage')
+	            if(el) addHandlers(el)
+	        }
+	    })
+  
 })()
