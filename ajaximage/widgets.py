@@ -13,16 +13,19 @@ class AjaxImageWidget(widgets.TextInput):
 
     html = """
     <div class="ajaximage">
+        <div class="progress active">
+            <div class="bar"></div>
+        </div>
         <a class="file-link" target="_blank" href="{file_url}">
             <img class="file-img" src="{file_url}">
         </a>
         <a class="file-remove" href="#remove">Remove</a>
         <input class="file-path" type="hidden" value="{file_path}" id="{element_id}" name="{name}" />
-        <input type="file" class="file-input" />
+        <span class="btn btn-default btn-file btn-mega center-block" data-size-priority="top">
+            <i class="fa fa-cloud-upload fa-fw"></i>
+            Upload picture...<input type="file" class="file-input" />
+        </span>
         <input class="file-dest" type="hidden" value="{upload_url}">
-        <div class="progress progress-striped active">
-            <div class="bar"></div>
-        </div>
     </div>
     """
 
